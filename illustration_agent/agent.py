@@ -1,5 +1,5 @@
 import os
-from google_adk import Agent, tool
+from google.adk import Agent, tool
 
 # Tool definition for generating an image
 @tool
