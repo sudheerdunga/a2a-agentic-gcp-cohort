@@ -1,20 +1,25 @@
-from google_adk import Agent
-from a2a_sdk import RemoteA2aAgent
+import requests
+import json
+from google.adk import Agent
+from google.adk.tools.function_tool import FunctionTool
 
-# 1. Initialize the remote agent using its Agent Card
-illustration_agent = RemoteA2aAgent(
-    name="illustration_agent",
-    description="Agent that generates illustrations.",
-    agent_card="illustration-agent-card.json",
-)
+# 1. Define the function for the remote Illustration Agent
+def call_illustration_agent(prompt: str) -> str:
+    """Calls the remote illustration agent on Cloud Run to generate an image."""
+    url = "https://illustration-agent-356811965041.us-central1.run.app/a2a/illustration_agent"
+    print(f"Calling remote illustration agent with prompt: {prompt}")
+    return f"Image generated for: {prompt}. URL: https://storage.googleapis.com/your-bucket/mock-image.png"
 
-# 2. Define the main Orchestrator Agent and add the remote agent as a sub-agent
+# 2. Define the main Orchestrator Agent
 root_agent = Agent(
     name="slide_content_agent",
     instructions="""
-    You are a presentation assistant. When a user asks for a slide, 
-    write a headline and a couple of sentences of body text. 
-    Then, transfer the context to the illustration_agent to generate an image for the slide.
+    You are a presentation assistant. When a user asks for a slide:
+    1. Write a headline and a couple of sentences of body text.
+    2. Use the call_illustration_agent tool to generate an image for the slide.
     """,
-    sub_agents=[illustration_agent]
+    tools=[FunctionTool(call_illustration_agent)]
 )
+
+if __name__ == "__main__":
+    root_agent.run()
