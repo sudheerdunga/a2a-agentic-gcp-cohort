@@ -25,5 +25,5 @@ root_agent = Agent(
 # Start the server on the port defined by Cloud Run ($PORT)
 if __name__ == "__main__":
     port = int(os.environ.get("PORT", 8080))
-    # Using the ADK Runner to serve the agent
-    Runner(agent=root_agent).run(port=port)
+    # Using the ADK Runner to serve the agent on 0.0.0.0
+    Runner(agent=root_agent).run(host="0.0.0.0", port=port)
