@@ -22,8 +22,4 @@ root_agent = Agent(
     tools=[FunctionTool(generate_image)]
 )
 
-# Start the server on the port defined by Cloud Run ($PORT)
-if __name__ == "__main__":
-    port = int(os.environ.get("PORT", 8080))
-    # Using the ADK Runner to serve the agent on 0.0.0.0
-    Runner(agent=root_agent).run(host="0.0.0.0", port=port)
+# The server will be started by the adk CLI in the Dockerfile
