@@ -1,6 +1,8 @@
 import os
 from google.adk import Agent
 from google.adk.tools.function_tool import FunctionTool
+# Import Runner for starting the server
+from google.adk import Runner
 
 # Tool definition for generating an image
 def generate_image(prompt: str) -> str:
@@ -19,3 +21,9 @@ root_agent = Agent(
     """,
     tools=[FunctionTool(generate_image)]
 )
+
+# Start the server on the port defined by Cloud Run ($PORT)
+if __name__ == "__main__":
+    port = int(os.environ.get("PORT", 8080))
+    # Using the ADK Runner to serve the agent
+    Runner(agent=root_agent).run(port=port)
